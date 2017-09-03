@@ -12,4 +12,23 @@
 //
 //= require rails-ujs
 //= require turbolinks
+//= require tippy.js/dist/tippy
 //= require_tree .
+
+document.addEventListener('turbolinks:load', function() {
+  var tippyButtons = Array.from(document.querySelectorAll('.btn'));
+  Array.prototype.forEach.call(tippyButtons, function(tippyButton, i){
+    // since turbolinks replaces <body> at each visit
+    // we need to reset the element unto which the
+    // popper element appends itself unto.
+    tippy.Defaults.appendTo = document.body;
+    tippyButton._tippyInstance = tippy(tippyButton);
+  });
+});
+
+document.addEventListener("turbolinks:before-cache", function() {
+  var tippyButtons = Array.from(document.querySelectorAll('.btn'));
+  Array.prototype.forEach.call(tippyButtons, function(tippyButton, i){
+    tippyButton._tippyInstance.destroyAll();
+  });
+});
